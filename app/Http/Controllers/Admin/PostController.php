@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Posts;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -16,11 +17,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        
+      
         $posts = Posts::all();
-
-       
+        //$posts = Posts::where('user_id', Auth::id())->get();
         return view('admin.posts.index', compact('posts'));
+        
     }
 
     /**
@@ -49,7 +50,7 @@ class PostController extends Controller
         //         'title' => 'required|unique:posts|max:60000',
         //         'post_image' => 'required|max:50',
         //         'post_content' => 'required|max:60000',
-                
+
         //     ],
         //     [
         //         'title.required' => 'aho, sto titolo ce lo volemo mette, Frà?'
@@ -65,7 +66,7 @@ class PostController extends Controller
         $post->post_date = $sentData['post_date'];
         $post->save();
 
-        return redirect()->route('admin.posts.show',compact('post'));
+        return redirect()->route('admin.posts.show', compact('post'));
     }
 
     /**
@@ -77,7 +78,7 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Posts::findOrFail($id);
-        return view('admin.posts.show',compact('post'));
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -102,10 +103,10 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         $sentData = $request->all();
-       
-       $post = Posts::findOrFail($id);
-       $post->update($sentData);
-       return redirect()->route('admin.posts.index', $post->id);
+
+        $post = Posts::findOrFail($id);
+        $post->update($sentData);
+        return redirect()->route('admin.posts.index', $post->id);
     }
 
     /**
@@ -116,7 +117,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        
+
         $post = Posts::findOrFail($id);
         $post->delete();
         return redirect()->route('admin.posts.index')->with('delete', $post->title);
