@@ -13,7 +13,11 @@ class posts extends Model
         'post_content',
         'post_date',
     ];
-    public function userDetails(){
+    public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    public function tags(){
+        return $this->belongsToMany('App\Models\Tag');
     }
 }
